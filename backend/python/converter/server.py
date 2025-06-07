@@ -28,3 +28,18 @@ class PDFConverterServicer(pdf_converter_pb2_grpc.PDFConverterServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(f"Error: {str(e)}")
             return pdf_converter_pb2.UploadResponce(success=False)
+
+    def Serve():
+        # create a server
+        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+
+        # connect a service to the server
+        pdf_converter_pb2_grpc.add_PDFConverterServicer_to_server(PDFConverterServicer, server)
+
+        # set server port 50051 without TLS
+        server.add_insecure_port('[::]:50051')
+
+        server.start()
+        server.wait_for_termination()
+
+
