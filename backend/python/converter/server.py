@@ -4,12 +4,13 @@ import os
 from proto import pdf_converter_pb2, pdf_converter_pb2_grpc
 from queue import Queue
 import tempfile
+import worker
 
 # tasks queue (pdf tmp files to convert)
 tasks_queue = Queue()
 
 class PDFConverterServicer(pdf_converter_pb2_grpc.PDFConverterServicer):
-    def UploadPDF(self, request_iterator, context):
+    def Convert(self, request_iterator, context):
         try:
             # creating a new tmp .pdf file
             with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
@@ -20,14 +21,24 @@ class PDFConverterServicer(pdf_converter_pb2_grpc.PDFConverterServicer):
                     tmp.write(chunk.data)
                 tmp_path = tmp.name
 
+            # creating future for a result of conversion
+            result_future = futures.Future()
+
             #adding a file to a tasks queue
-            tasks_queue.put(tmp_path)
-            return pdf_converter_pb2.UploadResponce(success=True)
+            tasks_queue.put((tmp_path, result_future))
+
+            # waiting for a result from a worker
+            text = result_future.result()
+
+            # deleting tmp pdf file
+            os.unlink(tmp_path)
+
+            return pdf_converter_pb2.ConvertResponce(text=text)
         
         except Exception as e:
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(f"Error: {str(e)}")
-            return pdf_converter_pb2.UploadResponce(success=False)
+            return pdf_converter_pb2.ConvertResponce(text="")
 
     def Serve():
         # create a server
