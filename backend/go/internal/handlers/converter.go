@@ -40,6 +40,7 @@ func HandleConvertPDF(client *grpcclient.GRPCClient) gin.HandlerFunc {
 		stream, err := client.NewStream(c)
 		if err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create gRPC stream: %v", err))
+			return
 		}
 
 		txtResult, err := converter.ConvertPDFtoTXT(pdfBytes, stream)

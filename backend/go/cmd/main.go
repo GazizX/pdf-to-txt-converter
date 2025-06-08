@@ -12,7 +12,7 @@ func main() {
 
 	newClient, err := grpcclient.NewGRPCClient(":50051") // заменить на ServerPORT из .env
 	if err != nil {
-		log.Printf("could not connect to gRPC server(Python): %v", err)
+		log.Fatalf("could not connect to gRPC server(Python): %v", err)
 	}
 
 	router := gin.Default()
