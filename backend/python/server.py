@@ -51,7 +51,7 @@ def serve():
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
         # connect a service to the server
-        pdf_converter_pb2_grpc.add_PDFConverterServicer_to_server(PDFConverterServicer, server)
+        pdf_converter_pb2_grpc.add_PDFConverterServicer_to_server(PDFConverterServicer(), server)
 
         # set server port 50051 without TLS
         server.add_insecure_port('[::]:50051')
