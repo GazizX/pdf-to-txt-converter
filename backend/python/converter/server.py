@@ -4,6 +4,7 @@ import os
 from proto import pdf_converter_pb2, pdf_converter_pb2_grpc
 from queue import Queue
 import tempfile
+import threading
 import worker
 
 # tasks queue (pdf tmp files to convert)
@@ -40,7 +41,12 @@ class PDFConverterServicer(pdf_converter_pb2_grpc.PDFConverterServicer):
             context.set_details(f"Error: {str(e)}")
             return pdf_converter_pb2.ConvertResponce(text="")
 
-    def Serve():
+    def serve():
+        # starting 5 workers
+        for i in range(5):
+            t = threading.Thread(target=worker.process_pdf_task, args=(tasks_queue,), daemon=True)
+            t.start()
+
         # create a server
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
@@ -53,4 +59,6 @@ class PDFConverterServicer(pdf_converter_pb2_grpc.PDFConverterServicer):
         server.start()
         server.wait_for_termination()
 
+    if __name__ == '__main__':
+        serve() 
 
