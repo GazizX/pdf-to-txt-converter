@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -36,8 +37,8 @@ func HandleConvertPDF(client *grpcclient.GRPCClient) gin.HandlerFunc {
 			c.String(http.StatusBadRequest, "not a valid PDF file")
 			return
 		}
-
-		stream, err := client.NewStream(c)
+		ctx := context.Background()
+		stream, err := client.NewStream(ctx)
 		if err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create gRPC stream: %v", err))
 			return
@@ -49,6 +50,12 @@ func HandleConvertPDF(client *grpcclient.GRPCClient) gin.HandlerFunc {
 			return
 		}
 
-		c.Data(http.StatusOK, "text/plain", []byte(txtResult))
+		txtFile, err := utils.TxtToFile(txtResult)
+		if err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to convert string into .txt: %v", err))
+			return
+		}
+
+		c.FileAttachment(txtFile.Name(), "converted.txt")
 	}
 }
