@@ -34,12 +34,12 @@ class PDFConverterServicer(pdf_converter_pb2_grpc.PDFConverterServicer):
             # deleting tmp pdf file
             os.unlink(tmp_path)
 
-            return pdf_converter_pb2.ConvertResponce(text=text)
+            return pdf_converter_pb2.ConvertResponse(text=text)
         
         except Exception as e:
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(f"Error: {str(e)}")
-            return pdf_converter_pb2.ConvertResponce(text="")
+            return pdf_converter_pb2.ConvertResponse(text="")
 
 def serve():
         # starting 5 workers
