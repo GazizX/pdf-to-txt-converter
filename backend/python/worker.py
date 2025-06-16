@@ -2,42 +2,38 @@ import pdfplumber
 import os
 
 def convert_pdf_to_text(pdf_path: str) -> str:
-    text_output = []
+    result = []
 
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
-            # Получаем все текстовые блоки с координатами
-            words = page.extract_words(use_text_flow=True, keep_blank_chars=True)
+            lines_dict = {}
 
-            # Сортируем слова сначала по координате y (сверху вниз), затем по x (слева направо)
-            words.sort(key=lambda w: (round(w['top'], 1), w['x0']))
+            # Получаем слова с координатами
+            words = page.extract_words(use_text_flow=True)
 
-            current_y = None
-            current_line = []
-
+            # Группируем слова по координате 'top' (приближенно — по строкам)
             for word in words:
-                y = round(word['top'], 1)
-                x = word['x0']
-                text = word['text']
+                top = round(word['top'], 1)  # округляем для устойчивости
+                if top not in lines_dict:
+                    lines_dict[top] = []
+                lines_dict[top].append(word)
 
-                # Если новая строка (значительно отличается по координате y)
-                if current_y is None or abs(y - current_y) > 2:
-                    if current_line:
-                        text_output.append(''.join(current_line))
-                        current_line = []
-                    current_y = y
-                    # Добавляем отступы по x (1 пробел на ~5px отступа)
-                    indent = int(x // 5)
-                    current_line.append(' ' * indent + text)
-                else:
-                    current_line.append(' ' + text)
+            # Сортируем строки по вертикальной позиции
+            for top in sorted(lines_dict.keys()):
+                line_words = lines_dict[top]
+                # Сортируем слова по горизонтали
+                line_words.sort(key=lambda w: w['x0'])
 
-            # Добавим последнюю строку
-            if current_line:
-                text_output.append(''.join(current_line))
+                # Получаем отступ первого слова
+                indent = int(line_words[0]['x0'] // 7)  # эмпирически 1 пробел ≈ 7px
+                line = " " * indent + " ".join(w['text'] for w in line_words)
+                result.append(line)
 
-    return '\n'.join(text_output)
-    
+            # Добавляем символ перевода страницы (form feed)
+            result.append("\f")
+
+    return "\n".join(result).strip("\f")
+
 def process_pdf_task(queue):
     while True:
         # getting a task from queue
