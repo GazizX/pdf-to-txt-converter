@@ -2,9 +2,11 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/GazizX/pdf-to-text-converter/internal/grpcclient"
 	"github.com/GazizX/pdf-to-text-converter/internal/handlers"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -20,6 +22,14 @@ func main() {
 
 	router := gin.Default()
 	router.MaxMultipartMemory = 25 << 20 // 25 Mb
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"POST", "GET", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	router.POST("/convert", handlers.HandleConvertPDF(newClient))
 
