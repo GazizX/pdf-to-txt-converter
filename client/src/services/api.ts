@@ -1,6 +1,6 @@
 export async function uploadPDF(file:any) {
     const formData = new FormData();
-    formData.append("pdfFile", file);
+    formData.append("file", file);
 
     const response = await fetch ("http://localhost:8080/convert", {
         method: "POST",

@@ -16,6 +16,15 @@
   font-size: 40px;
 }
 
+p{
+  color: #000;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 40px;
+}
+
 
 h1{
   font-family: "Fredoka", sans-serif;
@@ -31,6 +40,7 @@ button, label {
 }
 
 .container {
+  width: 100%;
   position: absolute;
   top: 40%;
   left: 50%;
@@ -41,8 +51,33 @@ button, label {
   align-items: center;
 }
 
+.resultContainer {
+  height: 100%;
+  background-color: #C6DCFF;
+}
+
 .uploadForm {
   display: none;
+}
+
+.downloadBtn{
+  background-color: #FB6868;
+  width: 350px;
+  padding: 30px 20px;
+  border-radius: 16px;
+  border: none;
+}
+
+.downloadBtn:hover {
+  background-color: #f73a3a;
+  outline: #000 solid;
+}
+
+.anotherBtn {
+  background-color: #ADF0C7;
+  padding: 30px 20px;
+  border-radius: 16px;
+  border: none;
 }
 
 .uploadBtn {
@@ -52,10 +87,12 @@ button, label {
   border-radius: 16px;
 }
 
-.uploadBtn:hover {
+.uploadBtn:hover, .anotherBtn:hover {
   background-color: #12ff6d;
   outline: #000 solid;
 }
+
+
 
 
 

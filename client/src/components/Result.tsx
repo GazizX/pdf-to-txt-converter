@@ -12,6 +12,7 @@ const Result = ({blob, onReset}: {blob: Blob | null, onReset: React.MouseEventHa
     };
     return (
         <>
+        <div className="resultContainer">
             <div className="container">
                 <h1 className="title">PDF to TXT Converter</h1>
                 <p className="regularText">Your .txt file is ready! Thanks for choosing our service!</p>
@@ -26,9 +27,10 @@ const Result = ({blob, onReset}: {blob: Blob | null, onReset: React.MouseEventHa
                     onClick={onReset}
                     className="anotherBtn"
                 >
-                Convert another PDF file
+                <p>Convert another PDF file</p>
                 </button>
             </div>
+        </div>
         </>
     )
 }

@@ -13,6 +13,7 @@ import (
 
 func main() {
 	logger, _ := zap.NewProduction()
+	sugar := logger.Sugar()
 	defer logger.Sync()
 
 	newClient, err := grpcclient.NewGRPCClient(":50051", logger) // заменить на ServerPORT из .env
@@ -31,7 +32,7 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	router.POST("/convert", handlers.HandleConvertPDF(newClient))
+	router.POST("/convert", handlers.HandleConvertPDF(newClient, sugar))
 
 	router.Run(":8080") // заменить на ClientPORT из .env
 }
