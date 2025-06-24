@@ -15,7 +15,11 @@ type GRPCClient struct {
 }
 
 func NewGRPCClient(addr string, logger *zap.Logger) (*GRPCClient, error) {
-	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithStreamInterceptor(interceptors.ClientStreamInterceptor(logger)))
+	conn, err := grpc.NewClient(
+		addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithStreamInterceptor(interceptors.ClientStreamInterceptor(logger)),
+	)
 	if err != nil {
 		return nil, err
 	}

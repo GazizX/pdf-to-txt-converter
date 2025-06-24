@@ -1,0 +1,17 @@
+// proto/pdf_converter.proto
+syntax = "proto3";
+
+package pdf;
+option go_package = "./;proto";
+
+service PDFConverter {
+  rpc Convert (stream PDFChunk) returns (ConvertResponse);
+}
+
+message PDFChunk {
+  bytes data = 1;
+}
+
+message ConvertResponse {
+  string text = 1;
+}

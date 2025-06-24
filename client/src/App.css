@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@587&family=Montserrat:wght@700&display=swap');
+* {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+}
+
+#root {
+  background-color: #FB6868;
+  color: #000;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  height: 100vh;
+  font-size: 40px;
+}
+
+p{
+  color: #000;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 40px;
+}
+
+
+h1{
+  font-family: "Fredoka", sans-serif;
+  font-weight: 800;
+  font-size: 70px;
+}
+
+button, label {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.resultContainer {
+  height: 100%;
+  background-color: #C6DCFF;
+}
+
+.uploadForm {
+  display: none;
+}
+
+.downloadBtn{
+  background-color: #FB6868;
+  width: 350px;
+  padding: 30px 20px;
+  border-radius: 16px;
+  border: none;
+}
+
+.downloadBtn:hover {
+  background-color: #f73a3a;
+  outline: #000 solid;
+}
+
+.anotherBtn {
+  background-color: #ADF0C7;
+  padding: 30px 20px;
+  border-radius: 16px;
+  border: none;
+}
+
+.uploadBtn {
+  background-color: #5CFB99;
+  width: 420px;
+  padding: 30px 20px;
+  border-radius: 16px;
+}
+
+.uploadBtn:hover, .anotherBtn:hover {
+  background-color: #12ff6d;
+  outline: #000 solid;
+}
+
+
+
+
+

@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  go-backend:
+    build:
+      context: .
+      dockerfile: backend/go/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - python-grpc
+
+  python-grpc:
+    build:
+      context: .
+      dockerfile: backend/python/Dockerfile
+    ports:
+      - "50051:50051"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - go-backend
