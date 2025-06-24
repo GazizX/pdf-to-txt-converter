@@ -16,7 +16,7 @@ func main() {
 	sugar := logger.Sugar()
 	defer logger.Sync()
 
-	newClient, err := grpcclient.NewGRPCClient(":50051", logger) // заменить на ServerPORT из .env
+	newClient, err := grpcclient.NewGRPCClient("python-grpc:50051", logger) // заменить на ServerPORT из .env
 	if err != nil {
 		log.Fatalf("could not connect to gRPC server(Python): %v", err)
 	}
