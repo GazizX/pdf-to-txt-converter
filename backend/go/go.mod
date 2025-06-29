@@ -10,6 +10,7 @@ require (
 
 require (
 	github.com/gin-contrib/cors v1.7.6 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 )
 
