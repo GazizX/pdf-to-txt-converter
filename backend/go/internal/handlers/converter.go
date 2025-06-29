@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"path/filepath"
+	"strings"
 
 	"github.com/GazizX/pdf-to-text-converter/internal/converter"
 	"github.com/GazizX/pdf-to-text-converter/internal/grpcclient"
@@ -21,7 +24,8 @@ func HandleConvertPDF(client *grpcclient.GRPCClient, logger *zap.SugaredLogger) 
 			logger.Infof("no file provided: %v", err)
 			return
 		}
-
+		fileName := file.Filename
+		logger.Infof(string(fileName))
 		fileContent, err := file.Open()
 		if err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to open file: %v", err))
@@ -63,7 +67,16 @@ func HandleConvertPDF(client *grpcclient.GRPCClient, logger *zap.SugaredLogger) 
 			logger.Infof("failed to convert string into .txt: %v", err)
 			return
 		}
+		baseName := strings.TrimSuffix(filepath.Base(fileName), filepath.Ext(fileName))
+		outputFilename := baseName
 
-		c.FileAttachment(txtFile.Name(), "converted.txt")
+		// Устанавливаем заголовки
+		c.Header("Content-Type", "text/plain; charset=utf-8")
+		c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"; filename*=UTF-8''%s`,
+			url.QueryEscape(outputFilename),
+			url.PathEscape(outputFilename)))
+
+		// Отправляем файл
+		c.File(txtFile.Name())
 	}
 }

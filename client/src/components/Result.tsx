@@ -1,11 +1,11 @@
 import iconPath from "../assets/download.png"
-const Result = ({blob, onReset}: {blob: Blob | null, onReset: React.MouseEventHandler<HTMLButtonElement> | undefined }) => {
+const Result = ({blob, fileName, onReset}: {blob: Blob | null, fileName: string | null, onReset: React.MouseEventHandler<HTMLButtonElement> | undefined }) => {
     const downloadFile = () => {
         if (blob != null) {
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
-            link.download = "converted.txt";
+            link.download = fileName + ".txt";
             link.click();
             URL.revokeObjectURL(url);
         }
