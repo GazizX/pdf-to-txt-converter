@@ -7,6 +7,10 @@ import tempfile
 import threading
 import worker
 import logging
+import dotenv
+
+# load dotenv
+dotenv.load_dotenv(dotenv_path=os.path.join('..', 'go', '.env'))
 
 # tasks queue (pdf tmp files to convert)
 tasks_queue = Queue()
@@ -18,7 +22,7 @@ class PDFConverterServicer(pdf_converter_pb2_grpc.PDFConverterServicer):
 
             # creating a new tmp .pdf file
             with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
-                # collecting pdf data & wrighting in tmp
+                # collecting pdf data & writing in tmp
                 for chunk in request_iterator:
                     if not chunk.data:
                         raise ValueError("Empty chunk received")
@@ -30,11 +34,11 @@ class PDFConverterServicer(pdf_converter_pb2_grpc.PDFConverterServicer):
             # creating future for a result of conversion
             result_future = futures.Future()
 
-            #adding a file to a tasks queue
+            #adding the file to the tasks queue
             tasks_queue.put((tmp_path, result_future))
             logging.info(f"Task added to queue for {tmp_path}")
 
-            # waiting for a result from a worker
+            # waiting for the result from a worker
             text = result_future.result()
 
             # deleting tmp pdf file
@@ -64,9 +68,8 @@ def serve():
         # connect a service to the server
         pdf_converter_pb2_grpc.add_PDFConverterServicer_to_server(PDFConverterServicer(), server)
 
-        port = '50051'
-
-        # set server port 50051 without TLS
+        # set server port
+        port = os.getenv('PY_PORT')
         server.add_insecure_port(f"[::]:{port}")
 
         logging.info(f"gRPC server listening on port {port}")
